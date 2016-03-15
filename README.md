@@ -16,9 +16,15 @@
 - 实时消息
 - 朋友圈
 - 功能设置
+
+----------
+
 ## 后端语言 ##
 >使用的是ApiCloud的后台 基于**七牛云** 
 >，操作数据库的的SDK是 [Apicloud-Result.js](https://github.com/apicloudcom/mcm-js-sdk)
+
+----------
+
 ## 前端语言 ##
 - 表单验证使用的是新生帝的[avalidate.js](http://git.oschina.net/winu.net/availdate.js)
 - 页面布局使用的是[AUICSS](http://www.auicss.com)
