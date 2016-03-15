@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .aui-checkbox.checked {
+            background-color: #1abc9c;
+            border: solid 1px #1abc9c;
+            text-align: center;
+        }
+        .aui-checkbox.checked:before {
+            position: absolute;
+            left: 5px;
+            top: 1px;
+            font-size: 16px;
+            display: inline-block;
+            font-family: "iconfont";
+            content: "\e645";
+            color: #ffffff;
+        }
+        .aui-checkbox.checked:after {
+            position: absolute;
+            left: 5px;
+            top: 1px;
+            font-size: 16px;
+            display: inline-block;
+            font-family: "iconfont";
+            content: "\e645";
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="aui-content">
+        <ul class="aui-user-view">
+            <li class="aui-user-view-cell aui-img">
+                <span class="aui-pull-left aui-checkbox" tapmode onclick="toggleCheck(this);" data-id="1"></span>
+                <img class="aui-img-object aui-pull-left" src="../../image/demo4.png">
+                <div class="aui-img-body">
+                    <span>流浪男<em>11.1KM</em></span>
+                    <p class='aui-ellipsis-1'>北京轻元素网络科技</p>
+                </div>
+            </li>
+            <li class="aui-user-view-cell aui-img">
+                <span class="aui-pull-left aui-checkbox" tapmode onclick="toggleCheck(this);" data-id="2"></span>
+                <img class="aui-img-object aui-pull-left" src="../../image/demo1.png">
+                <div class="aui-img-body">
+                    <span>张三<em>11.1KM</em></span>
+                    <p class='aui-ellipsis-1'>北京轻元素网络科技</p>
+                </div>
+            </li>
+            <li class="aui-user-view-cell aui-img">
+                <span class="aui-pull-left aui-checkbox" tapmode onclick="toggleCheck(this);" data-id="3"></span>
+                <img class="aui-img-object aui-pull-left" src="../../image/demo4.png">
+                <div class="aui-img-body">
+                    <span>流浪男<em>11.1KM</em></span>
+                    <p class='aui-ellipsis-1'>北京轻元素网络科技</p>
+                </div>
+            </li>
+            <li class="aui-user-view-cell aui-img">
+                <span class="aui-pull-left aui-checkbox" tapmode onclick="toggleCheck(this);" data-id="4"></span>
+                <img class="aui-img-object aui-pull-left" src="../../image/demo1.png">
+                <div class="aui-img-body">
+                    <span>张三<em>11.1KM</em></span>
+                    <p class='aui-ellipsis-1'>北京轻元素网络科技</p>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="aui-btn-row">
+        <p>
+            <button id="btn" class="aui-btn aui-bar-dark aui-btn-block aui-btn-outlined" tapmode="" onclick="deleteAllUsers()">删除所有好友
+            </button>
+        </p>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="../../script/APICloud-rest-SHA1.js"></script>
+<script type="text/javascript" src="../../script/winu-base.js"></script>
+
+
+<script type="text/javascript">
+    //配置 连接数据库信息
+    var client = new Resource("A6995045649271", "C9C29F89-BCCD-501A-F46D-137CAB6FC4B4");
+    //对file表进行操作---》
+    window.File = client.Factory("file");
+    //对user表进行操作---》
+    window.User = client.Factory("user");
+    //对UserRelative表进行操作
+    window.UserRelative = client.Factory("UserRelative");
+    function deleteAllUsers(){
+        User.delete({"_id":$api.getStorage('id'),"_relation":"friend"}, function (ret,err) {
+            _toast('全部好友已删除');
+            _closeToWin('root');
+        });
+    }
+    apiready = function(){
+    };
+    var friendsTempList = {};
+
+    function toggleCheck(el){
+        var id = $api.attr(el, 'data-id');
+        if($api.hasCls(el, 'checked')){
+            $api.removeCls(el, 'checked');
+            friendsTempList[id] = false;
+        } else{
+            $api.addCls(el, 'checked');
+            friendsTempList[id] = true;
+        }
+        console.log(friendsTempList)
+    };
+</script>
+</html>

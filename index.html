@@ -1,0 +1,320 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>面包工作室</title>
+		<link rel="stylesheet" type="text/css" href="./css/aui.css" />
+		<style>
+			#aui-header {
+				display: block;
+			}
+			/*可切换的头部*/
+			.custom-headers {
+				display: none;
+				height: 45px;
+			}
+			.custom-headers.active {
+				display: block;
+			}
+			/*可点击，切换的头部*/
+			.header-btn-group {
+				margin: 0 auto;
+				font-size: 0;
+				width: 190px;
+				height: 26px;
+				position: relative;
+				top: 3px;
+				text-align: center;
+			}
+			.header-btn-group .header-btn {
+				display: inline-block;
+				height: 30px;
+				width: 90px;
+				font-size: 12px;
+				text-align: center;
+				line-height: 28px;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+				border: 1px solid #FFFFFF;
+				border-left: none;
+			}
+			.header-btn-group .header-btn.active, .header-btn-group .header-btn.tap-active, .header-btn-group .header-btn:active {
+				background-color: #FFFFFF;
+				color: #1abc9c;
+				box-shadow: inset 1px 1px 1px rgba(238, 238, 238, 0.6);
+			}
+			.header-btn-group .header-btn:first-child {
+				border-left: 1px solid #FFFFFF;
+				border-top-left-radius: 999px;
+				border-bottom-left-radius: 999px;
+			}
+			.header-btn-group .header-btn:last-child {
+				border-right: 1px solid #FFFFFF;
+				border-top-right-radius: 999px;
+				border-bottom-right-radius: 999px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bar-dark" id="aui-header">
+			<div class="custom-headers active">
+				<div class="header-btn-group">
+					<span class="header-btn active " tapmode="tap-active" onclick="changeHeaderBtns(0, 0);">我的动态</span>
+					<span class="header-btn" tapmode="tap-active" onclick="changeHeaderBtns(1, 0);">好友动态</span>
+				</div>
+			</div>
+			<div class="custom-headers">
+				<a class="aui-btn aui-bar-dark aui-pull-right" id="back" tapmode="tap-active" onclick="openAddContact();"> <span class="aui-iconfont aui-icon-roundadd"></span> </a>
+				<div class="header-btn-group">
+					<span class="header-btn active" tapmode="tap-active" onclick="changeHeaderBtns(0, 1);">联系人列表</span>
+					<span class="header-btn" tapmode="tap-active" onclick="changeHeaderBtns(1, 1);">群组列表</span>
+				</div>
+			</div>
+			<div class="custom-headers">
+				<div class="header-btn-group">
+					<span class="header-btn active" tapmode="tap-active" onclick="changeHeaderBtns(0, 2);">好友群组消息</span>
+					<span class="header-btn" tapmode="tap-active" onclick="changeHeaderBtns(1, 2);">系统消息</span>
+				</div>
+			</div>
+			<div class="custom-headers">
+				<a class="aui-btn aui-bar-dark aui-pull-left" id="back" tapmode="tap-active" onclick="myInfoBack();"> <span class="aui-iconfont aui-icon-left"></span> </a>
+				<div class="aui-title">
+					会员中心
+				</div>
+				<a class="aui-iconfont aui-icon-sitting aui-pull-right"></a>
+			</div>
+		</header>
+		<footer class="aui-nav" id="aui-footer">
+			<ul class="aui-bar-tab">
+				<li class="active-success" id="tabbar1" onclick="randomSwitchBtn(0)">
+					<span class="aui-iconfont aui-icon-favor"></span>
+					<p>
+						动态
+					</p>
+				</li>
+				<li id="tabbar2" onclick="randomSwitchBtn(1)">
+					<span class="aui-iconfont aui-icon-mark"></span>
+					<p>
+						联系人
+					</p>
+				</li>
+				<li id="tabbar3" onclick="randomSwitchBtn(2)">
+					<span class="aui-iconfont aui-icon-like"></span>
+					<p>
+						消息
+					</p>
+				</li>
+				<li id="tabbar4" onclick="randomSwitchBtn(3)">
+					<span class="aui-iconfont aui-icon-my"></span>
+					<p>
+						个人
+					</p>
+				</li>
+			</ul>
+		</footer>
+	</body>
+	<script type="text/javascript" src="./script/api.js"></script>
+	<script type="text/javascript" src="./script/common.js"></script>
+	<script type="text/javascript" src="./script/mycommon.js"></script>
+	<script type="text/javascript" src="./script/rong_index_init.js"></script>
+	<script type="text/javascript" src="./script/winu-base.js"></script>
+
+
+	<script type="text/javascript">
+		var header = $api.dom('#aui-header');
+		var rect = {};
+		/*rong全局*/
+		var rong;
+		apiready = function() {
+				//创建本地数据库 file
+			CreateDB('file');
+				//创建本地数据库 friends
+			setTimeout("CreateDB('friends')",200);
+			//本地数据库初始化完毕
+			$api.fixStatusBar(header);
+			$api.addHeaderColor(header);
+			var headerPos = $api.offset(header);
+			var body_h = $api.offset($api.dom('body')).h;
+			var footer_h = $api.offset($api.byId('aui-footer')).h;
+			rect = {
+				x : 0,
+				y : headerPos.h,
+				w : 'auto',
+				h : api.winHeight - headerPos.h - footer_h
+			};
+			api.addEventListener({
+				name: 'login_success'
+			}, function(){
+				apiready();
+			});
+			if ($api.getStorage('lastUser')) {//getStorage('lastUser')
+				// 有，继续
+				goPageLogin();
+			} else {
+				goPageLogin();
+				// 登录注册
+				return;
+			}
+			// 各页面未初始化之时↑
+			randomSwitchBtn(0);
+			/**
+			 *========================极光推送==============>>>
+			 */
+			var ajpush = api.require('ajpush');
+			api.addEventListener({
+				name : 'appintent'
+			}, function(ret, err) {
+				if (ret && ret.appParam.ajpush) {
+					var jpush = ret.appParam.ajpush;
+					var jsonStr = JSON.parse(jpush.extra);
+					var type = jsonStr.type;
+					var id = jsonStr.txt;
+					api.openWin({
+						name : 'name',
+						url : 'html/user/setingPage.html',
+						opaque : true,
+						vScrollBarEnabled : false,
+						pageParam : {
+							yw_id : id
+						}
+					});
+				}
+			});
+			//两个监听事件
+			var ajpush = api.require('ajpush');
+			api.addEventListener({
+				name : 'pause'
+			}, function(ret, err) {
+				ajpush.onResume();
+				//监听应用进入后台，通知jpush暂停事件
+			});
+			api.addEventListener({
+				name : 'resume'
+			}, function(ret, err) {
+				ajpush.onResume();
+				//监听应用恢复到前台，通知jpush恢复事件
+			});
+			var ajpush = api.require('ajpush');
+			ajpush.init(function(ret) {
+				if (ret && ret.status) {
+				}
+			});
+			//给机子设置别名
+			var user = $api.getStorage('user');
+			var param = {
+				alias : user
+			};
+			ajpush.bindAliasAndTags(param, function(ret) {
+				//alert('别名设置成功');
+			});
+			/**
+			 * ==========极光推送结束=====================>>>>>
+			 */
+
+		};
+		// 添加联系人按钮
+		function openAddContact() {
+			api.openFrame({
+				name : 'frm_add_menu',
+				url : './html/contact/frm_add_menu.html',
+				bounces : false,
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				}
+			});
+		};
+
+
+		function goPageLogin() {
+			api.openWin({
+				name : 'win_login',
+				url : './html/user/win_login.html',
+				bounces : false
+			});
+		};
+		function setGroupIndex(index) {
+		};
+		var headerInner = $api.domAll(header, '.custom-headers');
+		var headerTitle = $api.dom('#header-title');
+		var footer = $api.byId('aui-footer');
+		var footerBar = $api.domAll(footer, 'li');
+		function changeHeader(index) {
+			var headerActive = $api.domAll(header, '.custom-headers.active');
+			for (var i = 0; i < headerActive.length; i++) {
+				$api.removeCls(headerActive[i], 'active');
+			}
+			$api.addCls(headerInner[index], 'active');
+		};
+		var frames = {
+			0 : 'frm_my_latest',
+			4 : 'frm_all_latest',
+			1 : 'frm_contact',
+			5 : 'frm_contact_group',
+			2 : 'frm_msg_list',
+			6 : 'frm_sys_msg_list',
+			3 : 'frm_my_info'
+		};
+		function changeHeaderBtns(index, groupIndex) {
+			var thisBtns = $api.domAll(headerInner[groupIndex], '.header-btn');
+			var thisActive = $api.dom(headerInner[groupIndex], '.header-btn.active');
+			$api.removeCls(thisActive, 'active');
+			$api.addCls(thisBtns[index], 'active');
+			if (index == 0 && groupIndex == 0) {
+				randomSwitchBtn(0);
+			}
+			if (index == 1 && groupIndex == 0) {
+				randomSwitchBtn(4);
+			}
+			if (index == 0 && groupIndex == 1) {
+				randomSwitchBtn(1);
+			}
+			if (index == 1 && groupIndex == 1) {
+				randomSwitchBtn(5);
+			}
+			if (index == 0 && groupIndex == 2) {
+				randomSwitchBtn(2);
+			}
+			if (index == 1 && groupIndex == 2) {
+				randomSwitchBtn(6);
+			}
+		};
+		var lastPageIndex = 0;
+		function randomSwitchBtn(index) {
+
+			api.openFrame({
+				name : frames[index],
+				url : './html/index_group/' + frames[index] + '.html',
+				bounces : true,
+				bgColor : 'rgba(255,255,255,1)',
+				rect : rect
+			});
+			var footerActive = $api.domAll(footer, '.active-success');
+			for (var i = 0; i < footerActive.length; i++) {
+				$api.removeCls(footerActive[i], 'active-success');
+			}
+			if (index == 4) {
+				index = 0
+			}
+			if (index == 5) {
+				index = 1
+			}
+			if (index == 6) {
+				index = 2
+			}
+			if (index != 3) {
+				lastPageIndex = index;
+			}
+			$api.addCls(footerBar[index], 'active-success');
+			changeHeader(index);
+		}
+		//返回之前打开页面
+		function myInfoBack() {
+			randomSwitchBtn(lastPageIndex);
+		}
+	</script>
+</html>

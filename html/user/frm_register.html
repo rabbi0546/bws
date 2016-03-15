@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>注册页的框架(frame)部分</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/mycommon.css"/>
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="aui-form" id="frm">
+    <div class="aui-content my-header">
+        <div class="my-info">
+            <div class="img_y" onclick="newUser_pic();" id="change">
+                <img id="touxiang" class="c_bai" src="../../image/preload_img.png" data-rule="img" data-nullmsg="照片不能为空" data-errmsg="照片选择出错" data-sucmsg="">
+            </div>
+           点击选择头像<p class="nickname">
+        </p>
+        </div>
+    </div>
+    <div class="aui-input-row">
+        <span class="aui-input-addon aui-iconfont aui-icon-mobilefill"></span>
+        <input type="number" id="username" onblur="checkUserNameConflict()" class="aui-input" placeholder="手机或固话:"
+               data-rule="tm" data-nullmsg="手机或固话不能为空" data-errmsg="你输入的不是一个手机或者固话" data-sucmsg=""/>
+    </div>
+    <div class="aui-input-row">
+        <span class="aui-input-addon aui-iconfont aui-icon-lock"></span>
+        <input type="password" id="userPwd" class="aui-input" placeholder="密码(6~10位)" data-rule="s6-10"
+               data-nullmsg="请输入密码" data-errmsg="你输入的密码格式不正确" data-sucmsg=""/>
+    </div>
+    <div class="aui-input-row">
+        <span class="aui-input-addon aui-iconfont aui-icon-link"></span>
+        <input type="email" id="userEmail" class="aui-input" placeholder="邮箱:" data-rule="e" data-nullmsg="手机或固话不能为空"
+               data-errmsg="你输入的不是一个手机或者固话" data-sucmsg=""/>
+    </div>
+    <div class="aui-btn-row">
+        <p>
+            <button id="btn" class="aui-btn aui-bar-dark aui-btn-block aui-btn-outlined" tapmode="" onclick=""
+                    style="margin-right: 10px;">
+                <span class="aui-iconfont aui-icon-vip"></span>立即注册
+            </button>
+        </p>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/register.js"></script>
+<script type="text/javascript" src="../../script/hashes.min.js"></script>
+<script type="text/javascript" src="../../script/ajaxToRongCloud.js"></script>
+<script type="text/javascript" src="../../script/availdate-v1.0.2.js"></script>
+<script type="text/javascript" src="../../script/APICloud-rest-SHA1.js"></script>
+<script type="text/javascript" src="../../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="../../script/mycommon.js"></script>
+<script type="text/javascript">
+    //自定义添加avalidate.js中的规则
+    ac.addRule({
+        "tm": /((15)\d{9})|((13)\d{9})|((18)\d{9})|(0[1-9]{2,3}\-?[1-9]{6,7})/i
+    });
+    // 对，就这么简单就初始化了。
+    ac.form({
+        area: "#frm",    // 验证区域，支持标签，id，class，推荐使用id或者class
+        btn: "#btn",     // 触发验证的按钮或者元素，支持标签，id，class，推荐使用id或者class
+        endSuccess: function (data) {
+            //验证成功执行register.js中的注册方法
+            register();
+        }
+    });
+    var client = new Resource("A6995045649271", "C9C29F89-BCCD-501A-F46D-137CAB6FC4B4");
+    //对file表进行操作---》
+    window.File = client.Factory("file");
+    //对user表进行操作---》
+    window.User = client.Factory("user");
+    apiready = function () {
+        //优化点击事件
+        api.parseTapmode();
+        //初始化调用imageClip模块
+        window.imageClip = api.require('imageClip');
+    };
+    //修改userPic
+    function newUser_pic() {
+        api.actionSheet({
+            cancelTitle : '取消',
+            buttons : ['相册', '照相机']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+                var scene = 'album';
+                select(scene);
+            } else if (ret.buttonIndex == 2) {
+                var scene = 'camera';
+                select(scene);
+            } else {
+                return false;
+            }
+        });
+    }
+        //选择新图片
+    function newselct() {
+        select("album");
+    }
+        //选择方法
+    function select(scene) {
+        api.getPicture({
+            sourceType : scene,
+            encodingType : 'jpg',
+            mediaValue : 'pic',
+            destinationType : 'url'
+        }, function(ret, err) {
+            if (ret) {
+                if (!ret.data) {//如果不选择图片，则退出
+                    return;
+                }
+                api.openWin({
+                    name : "imageWin",
+                    url : "../imageclip/imageWin.html",
+                    pageParam : {
+                        imgUrl : ret.data
+                    },
+                    animation : {
+                        type : "none",
+                        subType : "from_right",
+                        duration : 0
+                    }
+                })
+            } else {
+                api.alert({
+                    msg : err.msg
+                });
+            }
+        });
+        return false;
+    }
+    //恢复默认头像
+    function csh() {
+        document.getElementById('touxiang').src = "../../image/preload_img.png";
+    }
+
+    //图片保存 关闭截图
+    function ImgUrl(savePath) {
+//			console.log(3)
+        $api.attr($api.byId('touxiang'), 'src', savePath);
+        //保存截好的图的地址到服务器_file表中
+        File.save({
+            file : {
+                isFile : true,
+                path : savePath,
+                values : {
+                    filename : $api.getStorage('lastUser') + '_' + getNowFormatDate() + '.png'
+                }
+            }
+        }, function(data, err) {
+            //alert(JSON.stringify(data.url));
+            //拿到返回的服务器图片地址的链接->存到Storage的储存区
+            $api.setStorage('new_Logo_Selected', data.url);
+        });
+        api.closeWin({
+            name : "imageWin"
+        });
+    }
+    // 获取当前时间============>>>>>>>>>>>>>>>>
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+        return currentdate;
+    }
+
+    //查询file表
+    function check_file_remote_url() {
+    }
+</script>
+</html>

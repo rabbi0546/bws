@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+		<style>
+			body {
+			}
+		</style>
+	</head>
+	<body></body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/uichat.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+		//监听消息列表发送来的插入消息消息事件
+		api.addEventListener({
+	        name:''
+        },function(ret,err){
+        	//coding...
+        });
+			//初始化输入框
+			var chatbox = api.require('UIChatBox');
+			chatbox.open({
+				placeholder : '请输入...',
+				maxRows : 4,
+				emotionPath : uiChatObject.imagePath,
+				texts : {
+					recordBtn : {
+						normalTitle : '按住 说话',
+						activeTitle : '松开 结束'
+					}
+				},
+				styles : {
+					inputBar : {
+						borderColor : '#d9d9d9',
+						bgColor : '#f2f2f2'
+					},
+					inputBox : {
+						borderColor : '#B3B3B3',
+						bgColor : '#FFFFFF'
+					},
+					emotionBtn : {
+						normalImg : 'widget://image/chatBox_face1.png'
+					},
+					extrasBtn : {
+						normalImg : 'widget://image/chatBox_add1.png'
+					},
+					keyboardBtn : {
+						normalImg : 'widget://image/chatBox_keyboard1.png'
+					},
+					speechBtn : {
+						normalImg : 'widget://image/chatBox_speech1.png'
+					},
+					recordBtn : {
+						normalBg : '#c4c4c4',
+						activeBg : '#999999',
+						color : '#000',
+						size : 14
+					},
+					indicator : {
+						target : 'both',
+						color : '#c4c4c4',
+						activeColor : '#9e9e9e'
+					}
+				},
+				extras : {
+					titleSize : 10,
+					titleColor : '#a3a3a3',
+					btns : [{
+						title : '图片',
+						normalImg : 'widget://image/chatBox_album1.png',
+						activeImg : 'widget://image/chatBox_album1.png'
+					}, {
+						title : '拍照',
+						normalImg : 'widget://image/chatBox_cam1.png',
+						activeImg : 'widget://image/chatBox_cam1.png'
+					}]
+				}
+			}, function(ret) {
+				//点击附加功能面板
+				if (ret.eventType == 'clickExtras') {
+					alert("用户点击了第" + ret.index + "个按钮");
+				}
+				//点击发送按钮
+				if (ret.eventType == 'send') {
+					alert('输入的内容是：' + ret.msg);
+				}
+			});
+		};
+	</script>
+</html>

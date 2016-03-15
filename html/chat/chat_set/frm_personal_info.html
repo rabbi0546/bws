@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>个人资料展示</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+		<style>
+			body {
+				background: #f7f9f8;
+			}
+			#aui-header {
+				display: block;
+			}
+			.my-header {
+				background: url('../../../image/mybg2.png') no-repeat;
+				background-size: cover;
+				min-height: 45px;
+				position: relative;
+			}
+			.my-menu {
+				position: absolute;
+				width: 100%;
+				height: 45px;
+				line-height: 45px;
+				left: 0;
+				bottom: 0;
+				text-align: center;
+				background: #ffffff;
+				filter: Alpha(opacity=50);
+				background: rgba(255, 255, 255, 0.2) none repeat scroll 0 0 !important;
+				color: #ffffff;
+				font-size: 14px;
+			}
+			.my-menu .aui-col-xs-6 {
+				border-right: 1px solid #9bd6d5;
+			}
+			.my-menu .aui-col-xs-6:last-child {
+				border-right: none;
+			}
+			.my-menu > div:active {
+				background: #ffffff;
+				filter: Alpha(opacity=50);
+				background: rgba(255, 255, 255, 0.2) none repeat scroll 0 0 !important;
+			}
+			.custom-headers {
+				display: none;
+				height: 45px;
+			}
+			.custom-headers.active {
+				display: block;
+			}
+			.aui-list-view-cell {
+				line-height: 26px;
+			}
+
+			#title_tip {
+				line-height: 45px;
+				margin-left: 26px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aui-content my-header">
+			<div class="my-menu">
+				<div class="aui-col-xs-6" tapmode="" onclick="api.openWin({name: 'edit_personal_info',url: './edit_personal_info.html'});">
+					编辑资料
+				</div>
+				<div class="aui-col-xs-6" tapmode="" onclick="api.openWin({name: 'private',url: './private_seting.html'});">
+					隐私策略
+				</div>
+			</div>
+		</div>
+
+		<div class="aui-content">
+
+			<div class="aui-form">
+
+				<p class="aui-padded-10 aui-text-center">账号</p>
+				<div class="aui-input-row aui-success">
+					<label class="aui-input-addon">面包号:</label>
+					<input type="text" id="bws_number" class="aui-input" value="输入"/>
+				</div>
+				<div class="aui-input-row aui-success">
+					<label class="aui-input-addon">手机号:</label>
+					<input type="text" id="p_number" class="aui-input" value="输入"/>
+				</div>
+				<div class="aui-input-row aui-success">
+					<label class="aui-input-addon">邮箱号:</label>
+					<input type="text" id="mail_address" class="aui-input" value="输入"/>
+				</div>
+
+			</div>
+		</div>
+
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+		api.parseTapmode();
+		init_local_person_info();
+		};
+		function init_local_person_info(){
+		var nickname = $api.getStorage('nickname');
+		var phone = $api.getStorage('phone');
+		var email = $api.getStorage('email');
+			$api.attr($api.byId('bws_number'),'value',nickname);
+			$api.attr($api.byId('p_number'),'value',phone);
+			$api.attr($api.byId('mail_address'),'value',email);
+		}
+	</script>
+</html>

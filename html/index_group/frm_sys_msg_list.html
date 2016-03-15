@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>系统消息列表</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+		<style>
+			html {
+				background: #f7f9f8;
+			}
+			/*自定义大小*/
+			.aui-list-view .aui-img-object {
+				height: 40px;
+			}
+			.aui-img-body {
+				font-size: 14px;
+			}
+			.aui-img-body p {
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<ul class="aui-list-view">
+			<li class="aui-list-view-cell aui-img">
+				<img class="aui-img-object aui-pull-left" src="../../image/demo4.png">
+				<div class="aui-img-body">
+					系统消息
+					<p class='aui-ellipsis-1'>
+						图文列表缩略图在左边的样式，默认大小为80PX，文字介绍内容可以为一行也可以为两行，超出部分自动省略
+					</p>
+				</div>
+			</li>
+			<li class="aui-list-view-cell aui-img">
+				<img class="aui-img-object aui-pull-left" src="../../image/demo5.png">
+				<div class="aui-img-body">
+					系统消息
+					<p class='aui-ellipsis-1'>
+						图文列表缩略图在左边的样式，默认大小为80PX，文字介绍内容可以为一行也可以为两行，超出部分自动省略
+					</p>
+				</div>
+			</li>
+			<li class="aui-list-view-cell aui-img">
+				<img class="aui-img-object aui-pull-left" src="../../image/demo6.png">
+				<div class="aui-img-body">
+					系统消息
+					<p class='aui-ellipsis-1'>
+						图文列表缩略图在左边的样式，默认大小为80PX，文字介绍内容可以为一行也可以为两行，超出部分自动省略
+					</p>
+				</div>
+			</li>
+			<li class="aui-list-view-cell aui-img">
+				<img class="aui-img-object aui-pull-left" src="../../image/demo6.png">
+				<div class="aui-img-body">
+					系统消息
+					<p class='aui-ellipsis-1'>
+						图文列表缩略图在左边的样式，默认大小为80PX，文字介绍内容可以为一行也可以为两行，超出部分自动省略
+					</p>
+				</div>
+			</li>
+		</ul>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			var body = $api.dom('body');
+			var listActive = $api.domAll(body, '.aui-list-view-cell');
+			for (var i = 0; i < listActive.length; i++) {
+				$api.attr(listActive[i], 'data-id', 'systargetId');
+				$api.attr(listActive[i], 'onclick', 'commonOpenWin(this)');
+			}
+		};
+		//公用打开窗口方法
+		var commonOpenWin = function(obj) {
+			var id = $api.attr(obj, 'data-id');
+			api.openWin({
+				name : 'common',
+				url : '../chat/chat_page/' + id + '.html',
+				bounces : false,
+				opaque : false,
+				bgColor : '#fff',
+				vScrollBarEnabled : true,
+				hScrollBarEnabled : false,
+				animation : {
+					type : 'flip',
+					subType : 'from_bottom',
+					duration : 500
+				}
+			});
+		}
+	</script>
+</html>

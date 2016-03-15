@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>个人中心</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mycommon.css"/>
+		<style>
+			.my-header {
+				background: url('../../image/my_person_logo.jpg') no-repeat;
+
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aui-content my-header">
+			<div class="my-info" >
+				<div class="img_y" onclick="newUser_pic();" id="change"><img id="touxiang" class="c_bai" src="../../image/preload_img.png">
+				</div>
+				面包工作室ID:<p class="nickname" >
+
+			</p>
+			</div>
+		</div>
+		<div class="aui-content">
+			<ul class="aui-list-view aui-in">
+				<li class="aui-list-view-cell" tapmode="" data-id="personal_info" onclick="commonOpenWin(this,'personalinfo')">
+					<i class="aui-iconfont aui-icon-edit aui-bg-info"></i>个人资料
+				</li>
+				<li class="aui-list-view-cell" tapmode="" data-id="account_seting" onclick="commonOpenWin(this,'acountinfo')">
+					<i class="aui-iconfont aui-icon-emoji aui-bg-success"></i>账号信息
+				</li>
+				<li class="aui-list-view-cell" tapmode=""  data-id="personal_album" onclick="commonOpenWin(this,'mtalbum')">
+					<i class="aui-iconfont aui-icon-favor aui-bg-danger"></i>我的相册
+				</li>
+			</ul>
+		</div>
+		<div class="aui-content ">
+			<ul class="aui-list-view aui-in">
+				<li class="aui-list-view-cell" tapmode="" data-id="setingPage" onclick="commonOpenWin(this,'systemset')">
+					<i class="aui-iconfont aui-icon-settings aui-bg-warning"></i>系统设置
+				</li>
+				<li class="aui-list-view-cell">
+					<a class="aui-arrow-right" tapmode="" onclick="cleanCachein()"> 清除缓存 <span class="aui-badge aui-badge-danger" id="cleanCachein">36M</span> </a>
+				</li>
+				<li class="aui-list-view-cell">
+					<a class="aui-arrow-right" tapmode="" onclick="meChat()" >在线客服</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/commonOpenWinForPersonal.js"></script>
+	<script type="text/javascript" src="../../script/meChat.js"></script>
+	<script type="text/javascript" src="../../script/cleanCachein.js"></script>
+	<script type="text/javascript" src="../../script/APICloud-rest-SHA1.js"></script>
+	<script type="text/javascript" src="../../script/APICloud-rest.js"></script>
+	<script type="text/javascript" src="../../script/mycommon.js"></script>
+	<script type="text/javascript">
+		//p屏蔽可容差性错误
+		window.onerror = function() {
+			return true;
+		};
+		var client = new Resource("A6995045649271", "C9C29F89-BCCD-501A-F46D-137CAB6FC4B4");
+		//对file表进行操作---》
+		window.File = client.Factory("file");
+		//对user表进行操作---》
+		window.User = client.Factory("user");
+		apiready = function() {
+			window.db = api.require('db');
+			api.parseTapmode();
+			window.imageClip = api.require('imageClip');
+			//!@ 创建本地数据库 如果没有，这一步必须在这里面先做，要不会报错
+			ExecuteSql('file', 'create table if not exists File (id int primarykey auto_increment, username varchar(255), photopath varchar(255));');
+			//初始化本地头像 用户账号信息
+			init_local_user_info();
+			//SelectSql('file', 'select * from File ');
+			//SelectSql('file',  ' select count(*) as value from File');
+			//
+			_get_Cache_Size();
+		};
+		//修改userPic
+		function newUser_pic() {
+			api.actionSheet({
+				cancelTitle : '取消',
+				buttons : ['相册', '照相机']
+			}, function(ret, err) {
+				if (ret.buttonIndex == 1) {
+					var scene = 'album';
+					select(scene);
+				} else if (ret.buttonIndex == 2) {
+					var scene = 'camera';
+					select(scene);
+				} else {
+					return false;
+				}
+			});
+		}
+
+		function newselct() {
+			select("album");
+		}
+
+		function select(scene) {
+			api.getPicture({
+				sourceType : scene,
+				encodingType : 'jpg',
+				mediaValue : 'pic',
+				destinationType : 'url'
+			}, function(ret, err) {
+				if (ret) {
+					if (!ret.data) {//如果不选择图片，则退出
+						return;
+					}
+					api.openWin({
+						name : "imageWin",
+						url : "../imageclip/imageWin.html",
+						pageParam : {
+							imgUrl : ret.data
+						},
+						animation : {
+							type : "none",
+							subType : "from_right",
+							duration : 0
+						}
+					})
+				} else {
+					api.alert({
+						msg : err.msg
+					});
+				}
+			});
+			return false;
+		}
+		//恢复默认头像
+		function csh() {
+			document.getElementById('touxiang').src = "../../image/lala.jpg";
+		}
+
+		//图片保存 关闭截图
+		function ImgUrl(savePath) {
+//			console.log(3)
+			$api.attr($api.byId('touxiang'), 'src', savePath);
+			File.save({
+				file : {
+					isFile : true,
+					path : savePath,
+					values : {
+						filename : $api.getStorage('lastUser') + '_' + getNowFormatDate() + '.png'
+					}
+				}
+			}, function(data, err) {
+				//alert(JSON.stringify(data.url));
+				$api.setStorage('user_remote_photo_url', data.url);
+				//存储上传的头像的远程url到本地
+				User.save({
+					"_id" : $api.getStorage('id')
+				}, {
+					photo : $api.getStorage('user_remote_photo_url'),
+					emailVerified : true
+				}, function(ret, err) {
+					//缓存远程图片地址到本地
+					remote_imageCache(ret.photo);
+				});
+				//判断有网还是没网
+				//上传头像成功了，
+				//存储本地照片信息
+				// @1----->没网 直接把地址赋值给这个图片
+				//，@----->2如果有网 从云服务器获取地址 赋值给这张图片
+				//  select count(*) as value from File
+				SelectSql('file', 'select count(*) as value from File', function(data) {
+					$api.setStorage('photo_count', data[0]['value']);
+				});
+				ExecuteSql('file', 'create table if not exists File (id int primarykey auto_increment, username varchar(255), photopath varchar(255));');
+				ExecuteSql('file', 'insert into File(id,username,photopath)values("' + $api.getStorage('photo_count') + '","' + $api.getStorage('lastUser') + '","' + savePath + '");');
+				search_File($api.getStorage('lastUser'));
+			});
+			api.closeWin({
+				name : "imageWin"
+			});
+		}
+			//初始化本地信息===============>>>>>>>>>>>
+		function init_local_user_info() {
+			/**
+			 * 第一步 判断是本地是否有缓存用户 账号 照片路径信息
+			 * 第二步 如果有，就将数据给这个节点，如果没有，就启动第三步
+			 * 第三步 如果没有本地缓存 ，直接 查询数据库 找到信息 下载照片，将照片路径 和信息 再次缓存本地数据库
+			 */
+			//有网 直接从网上获取===============>>>>>>>>
+			User.get({  
+				"_id" : $api.getStorage('id')
+			}, function(ret, err) {
+				
+				$api.attr($api.byId('touxiang'), 'src', ret.photo);
+				remote_imageCache(ret.photo);
+			});
+			//如果没网 ， 直接从本地获取数据=========>>>>>>>>>>>>
+			var local_user_account = $api.getStorage('nickname');
+			$api.html($api.dom('.nickname'), local_user_account);
+				var local_check = SelectSql('file', 'select * from File ', function(data) {
+				var _index = $api.getStorage('photo_count');
+				// local_photo_path 本地存储的照片地址
+				// local_user_account 本地存储的用户账户名称
+				$api.setStorage('local_photo_path', data[_index]['photopath']);
+					$api.setStorage('photo',data[_index]['photopath']);
+				$api.setStorage('local_user_account', data[_index]['username']);
+
+				var local_photo_path = $api.getStorage('local_photo_path');
+				if (local_photo_path == null || undefined) {
+					User.get({
+						"_id" : $api.getStorage('id')
+					}, function(ret, err) {
+						
+						$api.attr($api.byId('touxiang'), 'src', ret.photo);
+						remote_imageCache(ret.photo);
+					});
+				} else {
+					$api.attr($api.byId('touxiang'), 'src', local_photo_path);
+				}
+			});
+		}
+
+		// 获取当前时间============>>>>>>>>>>>>>>>>
+		function getNowFormatDate() {
+			var date = new Date();
+			var seperator1 = "-";
+			var seperator2 = ":";
+			var month = date.getMonth() + 1;
+			var strDate = date.getDate();
+			if (month >= 1 && month <= 9) {
+				month = "0" + month;
+			}
+			if (strDate >= 0 && strDate <= 9) {
+				strDate = "0" + strDate;
+			}
+			var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+			return currentdate;
+		}
+
+		//查询file表
+		function check_file_remote_url() {
+		}
+
+	</script>
+</html>

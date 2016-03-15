@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+		<style>
+			body {
+				background: #f7f9f8;
+			}
+			#aui-header {
+				display: block;
+			}
+			.custom-headers {
+				display: none;
+				height: 45px;
+			}
+			.custom-headers.active {
+				display: block;
+			}
+			.aui-list-view-cell {
+				line-height: 26px;
+			}
+			#tip_chatting {
+				line-height: 26px;
+				margin-left: 26px;
+			}
+			#title_tip {
+				line-height: 45px;
+				margin-left: 26px;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<p id="tip_chatting">
+				账号
+			</p>
+		</div>
+		<div class="aui-content">
+			<ul class="aui-list-view">
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						面包号
+					</div>
+					<span class="aui-badge  aui-pull-left ">genius</span>
+				</li>
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						QQ号
+					</div>
+					<span class="aui-badge aui-pull-left ">123456789</span>
+				</li>
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						手机号
+					</div>
+					<span class="aui-badge aui-pull-left ">123456789</span>
+				</li>
+				<li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+					<div class="aui-switch-title" >
+						邮件地址
+					</div>
+					<span class="aui-badge aui-pull-left ">未验证</span>
+				</li>
+			</ul>
+		</div>
+		<div>
+			<p id="tip_chatting">
+				安全
+			</p>
+		</div>
+		<div class="aui-content">
+			<ul class="aui-list-view">
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						声音锁
+					</div>
+					<span class="aui-badge aui-badge-danger" id="cleanCachein">NEW</span>
+				</li>
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						面包密码
+					</div>
+				</li>
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						账号保护
+					</div>
+					<span class="aui-badge aui-badge-success" >已保护</span>
+				</li>
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						手机安全防护
+					</div>
+					<span class="aui-badge " >未开启</span>
+				</li>
+				<li class="aui-list-view-cell aui-switch-body" tapmode="">
+					<div class="aui-switch-title">
+						面包安全中心
+					</div>
+					<span class="aui-badge aui-pull-right " >找回密码...</span>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript">
+		api.parseTapmode();
+	</script>
+</html>

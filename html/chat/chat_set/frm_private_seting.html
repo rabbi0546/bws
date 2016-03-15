@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+    <style>
+    	.aui-list-view-cell {
+            line-height: 26px;
+        } 
+        #tip_chatting{
+        	line-height: 26px;
+        	margin-left:26px;
+        }  
+    </style>
+</head>
+<body>
+ <div>	<p id="tip_chatting">通讯录</p></div>
+	<div class="aui-content">
+        <ul class="aui-list-view">
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">加我为朋友时需要验证</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+            </li>
+            
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">向我推荐QQ好友</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+            </li>
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">向我推荐通讯录好友</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+            </li>
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+                <div class="aui-switch-title">通讯录黑名单</div>
+            </li>
+        </ul>
+    </div>
+        <div>	<p id="tip_chatting">可以搜索到我</p></div>
+    <div class="aui-content">
+        <ul class="aui-list-view">
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">通过面包ID号搜到我</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+            </li>
+            
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">通过手机号搜到我</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" >
+            </li>
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">通过QQ号搜到我</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+            </li>
+        </ul>
+    </div>
+    <div>	<p id="tip_chatting">动态设置</p></div>
+     <div class="aui-content">
+        <ul class="aui-list-view">
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+                <div class="aui-switch-title">不让TA看我的动态</div>
+            </li>
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode=""> 
+                <div class="aui-switch-title">不看TA的动态</div>
+            </li>
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+                <div class="aui-switch-title">动态分组</div>
+            </li>
+             <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">允许陌生人查看十张照片</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		api.parseTapmode();
+	};
+</script>
+</html>

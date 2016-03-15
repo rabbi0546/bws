@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+    <style>
+    	body { background: #f7f9f8;}
+    	 #aui-header{
+            display: block;
+        }
+         .custom-headers{
+            display: none;
+            height: 45px;
+        }
+         .custom-headers.active{
+            display: block;
+        }
+        .aui-list-view-cell {
+            line-height: 26px;
+        } 
+        #tip_chatting{
+        	line-height: 26px;
+        	margin-left:26px;
+        }
+        #title_tip{
+        line-height: 45px;
+        margin-left:26px;
+        }    
+    </style>
+</head>
+<body>
+    <div class="aui-content">
+        <ul class="aui-list-view">
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">使用听筒播放声音</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" >
+            </li>
+            
+            <li class="aui-list-view-cell aui-switch-body" tapmode="">
+                <div class="aui-switch-title">回车键发送消息</div>
+                <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" >
+            </li>
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+                <div class="aui-switch-title">聊天背景</div>
+            </li>
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+                <div class="aui-switch-title">表情管理</div>
+            </li>
+        </ul>
+    </div>
+    
+    <div>	<p id="tip_chatting">聊天记录</p></div>
+    	
+     <div class="aui-content">
+     
+        <ul class="aui-list-view">
+       		 
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+                <div class="aui-switch-title">聊天记录备份和恢复</div>
+            </li>
+            <li class="aui-list-view-cell " data-win="list_arrow" tapmode="">
+                <div class="aui-switch-title">清空聊天记录</div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript">
+				apiready = function(){
+				api.parseTapmode();
+				};
+			
+	
+</script>
+</html>

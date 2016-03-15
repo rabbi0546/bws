@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>好友搜索结果-win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        body { background: #f7f9f8;}
+        #aui-header{
+            display: block;
+        }
+        #tip_chatting{
+            line-height: 26px;
+            margin-left:26px;
+        }
+        #title_tip{
+            line-height: 45px;
+            margin-left:26px;
+        }  
+        
+    </style>
+</head>
+<body>
+    <header class="aui-bar  aui-bar-dark" id="aui-header"> 
+        <div class="custom-headers active">
+            <a class="aui-btn aui-bar-dark " id="back" tapmode="tap-active" onclick=" api.closeWin();">
+                <span class="aui-iconfont aui-icon-left"></span>
+                <span id="title_tip">添加好友</span>
+            </a>
+            <span class="aui-btn a aui-bar-dark aui-pull-right" tapmode="tap-active" onclick="openSearchbar();">
+            	<span class="aui-iconfont aui-icon-roundadd"></span>
+            </span>
+        </div>
+    </header>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var header = $api.dom('#aui-header');
+    var titleTip = $api.dom('#title_tip');
+    
+    apiready = function(){
+        $api.fixStatusBar(header);
+        $api.addHeaderColor(header);
+        var headerPos = $api.offset(header);
+
+        rect = {
+            x: 0, 
+            y: headerPos.h, 
+            w:'auto', 
+            h: 'auto'
+        };
+        api.openFrame({
+            name: 'frm_friend_result',
+            url: './frm_friend_result.html',
+            rect: rect,
+        });
+    };
+    function openSearchbar(){
+    	api.sendEvent({
+    		name: 'openSearchbar'
+    	});
+    };
+
+</script>
+</html>

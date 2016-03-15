@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>添加用户菜单页</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style>
+            html, body{
+                background: none;
+            }
+            header{
+                height: 45px;
+                -webkit-box-sizing: content-box;
+                box-sizing: content-box;
+            }
+            body{
+                display: none;
+            }
+            body.active{
+                display: block;
+            }
+            .body_shadow{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+            }
+            #menu_list{
+                z-index: 2;
+            }
+            .aui-list-view-cell{
+                background-color: #34495E;
+                color: #FFFFFF;
+            }
+            .aui-list-view-cell:active, .aui-list-view-cell.tap-active{
+                opacity: 0.8;
+            }
+        </style>
+</head>
+<body>
+    <header></header>
+    <ul id="menu_list" class="aui-list-view aui-pull-right">
+        <li class="aui-list-view-cell " tapmode="tap-active" onclick="addFriends();">添加好友</li>
+        <li class="aui-list-view-cell " tapmode="tap-active" onclick="manageFriends();">管理好友</li>
+        <li class="aui-list-view-cell " tapmode="tap-active" onclick="openQrcodeMod();">二维码添加</li>
+    </ul>
+    <div class="body_shadow" tapmode onclick="hideThis();"></div>
+</body>
+    <script src="../../script/api.js"></script>
+    <script>
+        var header = $api.dom('header');
+        apiready = function() {
+            $api.fixStatusBar(header);
+            $api.addCls($api.dom('body'), 'active');
+        };
+        function hideThis(){
+            api.setFrameAttr({
+                name: 'frm_add_menu',
+                hidden: true
+            });
+        };
+        function addFriends(){
+            hideThis();
+            api.openWin({
+                name: 'win_friend_result',
+                url: './win_friend_result.html',
+                bounces: false
+            })
+        };
+        function manageFriends(){
+            hideThis();
+            api.openWin({
+                name: 'win_management',
+                url: './win_management.html',
+                bounces: false
+            });
+        };
+        function openQrcodeMod(){
+            hideThis();
+            var obj = api.require('FNScanner');
+            obj.openScanner({
+                sound: 'widget://res/beep.wav',
+                autoLight: true,
+                saveToAlbum: false,
+                saveImg: {
+                    path: '',
+                    w: 200,
+                    h: 200
+                }
+            }, function(ret) {
+                if(ret.eventType == 'success'){
+                    alert(JSON.stringify(ret));
+                }
+            });
+
+        };     
+    </script>
+</html>

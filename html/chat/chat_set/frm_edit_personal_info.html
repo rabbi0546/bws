@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>编辑个人资料</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+		<style>
+
+		</style>
+	</head>
+	<body>
+
+		<div class="aui-content">
+
+			<div class="aui-form" id="frm">
+
+				<div class="aui-input-row">
+					<label class="aui-input-addon">性别</label>
+					<div class="aui-pull-right">
+						<input class="aui-radio" type="radio" name="demo1" checked><div class="aui-radio-name">男</div>
+						<input class="aui-radio" type="radio" name="demo1"><div class="aui-radio-name">女</div>
+					</div>
+				</div>
+				<div class="aui-input-row aui-success">
+					<label class="aui-input-addon">实名:</label>
+					<input type="text" id="real_name" class="aui-input" value="" data-rule="cname" data-nullmsg="名字不能为空" data-errmsg="请输入中文名" data-sucmsg=""/>
+				</div>
+				<div class="aui-input-row aui-success">
+					<label class="aui-input-addon">生日:</label>
+					<input type="text" id="birthday" class="aui-input" value="" data-rule="date" data-nullmsg="出生日期为空" data-errmsg="你输入的日期格式不正确" data-sucmsg="验证成功"/>
+				</div>
+				<div class="aui-input-row aui-success">
+					<label class="aui-input-addon">地址:</label>
+					<input type="text" id="work_address" class="aui-input" value="" data-rule="*" data-nullmsg="地址不能为空" data-errmsg="请输入正确的地址" data-sucmsg="" />
+				</div>
+				<div class="aui-btn-row">
+					<p>
+						<button id="btn" class="aui-btn aui-bar-dark aui-btn-block aui-btn-outlined" tapmode="" onclick="">提交
+						</button>
+					</p>
+				</div>
+
+			</div>
+
+		</div>
+
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/availdate-v1.0.2.js"></script>
+	<script type="text/javascript">
+		ac.form({
+			area: "#frm",   // 验证区域，支持标签，id，class，推荐使用id或者class
+			btn: "#btn",     // 触发验证的按钮或者元素，支持标签，id，class，推荐使用id或者class
+			endSuccess: function (data) {
+//				register();
+			}
+		});
+		apiready = function() {
+			api.parseTapmode();
+			init_local_person_info();
+		};
+		function init_local_person_info(){
+			var nickname = $api.getStorage('nickname');
+			var phone = $api.getStorage('phone');
+			var email = $api.getStorage('email');
+			$api.attr($api.byId('mail_address'),'value',email);
+		}
+	</script>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mycommon.css" />
+		<style>
+
+			.my-header {
+				background: url('../../image/my_person_logo.jpg') no-repeat;
+
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aui-form" id="frm">
+			<div class="aui-content my-header">
+				<div class="my-info">
+					<div class="img_y" onclick="" id="change">
+						<img id="touxiang" class="c_bai" src="../../image/preload_img.png">
+					</div>
+					面包工作室ID：<p class="nickname">
+				</p>
+				</div>
+			</div>
+			<div class="aui-input-row">
+				<span class="aui-input-addon aui-iconfont aui-icon-myfill"></span>
+				<input type="number" id="username" class="aui-input" placeholder="手机或固话" data-rule="tm" data-nullmsg="手机或固话不能为空" data-errmsg="你输入的不是一个手机或者固话" data-sucmsg=""/>
+			</div>
+			<div class="aui-input-row">
+				<span class="aui-input-addon aui-iconfont aui-icon-lock" ></span>
+				<input type="password" id="password" class="aui-input" placeholder="密码" data-rule="s6-10" data-nullmsg="请输入密码" data-errmsg="你输入的密码不正确" data-sucmsg=""/>
+			</div>
+			<div class="aui-btn-row">
+				<p>
+					<button id="btn" class="aui-btn aui-bar-dark aui-btn-block aui-btn-outlined" tapmode="" onclick="ac.form.startCheck" style="margin-right: 10px;">
+						<span class="aui-iconfont aui-icon-vip" ></span>立即登录
+					</button>
+				</p>
+			</div>
+		</div>
+		</div> <script src="../../script/api.js"></script>
+		<script src="../../script/common.js"></script>
+		<script src="../../script/SHA1.js"></script>
+		  <script src="../../script/availdate-v1.0.2.js"></script>
+		<script src="../../script/winu-base.js"></script>
+
+		<script>
+		ac.addRule({
+            "tm": /((15)\d{9})|((13)\d{9})|((18)\d{9})|(0[1-9]{2,3}\-?[1-9]{6,7})/i
+        });
+    // 对，就这么简单就初始化了。
+        ac.form({
+            area: "#frm",   // 验证区域，支持标签，id，class，推荐使用id或者class
+            btn: "#btn",     // 触发验证的按钮或者元素，支持标签，id，class，推荐使用id或者class
+            endSuccess: function (data) {
+            login();
+            }
+        });
+			//*****************************************************************
+			apiready = function() {
+				//加载上次登录的头像和用户ID信息
+				var photo_src = $api.getStorage('photo');
+				var nickname_src = $api.getStorage('nickname');
+				if(photo_src!==undefined||nickname_src!==undefined){
+				$api.attr($api.byId('touxiang'), 'src', photo_src);
+				$api.html($api.dom('.nickname'), nickname_src);
+				}else{
+				$api.attr($api.byId('touxiang'), 'src', '../../image/about_log.png');
+				$api.html($api.dom('.nickname'), '面包工作室');
+				}
+				
+				//优化点击事件
+				api.parseTapmode();
+				//链接数据库，为之后查询插入数据库值做准备
+				var model = api.require('model');
+				var query = api.require('query');
+				var relation = api.require('relation');
+				//进行连接云端的配置方法 第一步
+				model.config({
+					appId : 'A6995045649271', //应用的id，在APICloud上应用概览里获取，可以为空
+					appKey : 'C9C29F89-BCCD-501A-F46D-137CAB6FC4B4', //：应用的安全校验Key，在APICloud上应用概览里获取，不能为空
+					host : 'https://d.apicloud.com' //应用服务器地址，可为空，为空时默认为编译时的服务器地址
+				});
+			};
+
+			//去注册===============>>>>>>
+			function toRegister() {
+				api.openWin({
+					name : 'win_register',
+					url : './win_register.html'
+				});
+			}
+
+			//定义登录的方法=========>>>>>>>
+			function login() {
+				// 打开进度提示框
+				api.showProgress();
+				var username = $api.val($api.dom('#username'));
+				//获取当前表单中的值
+				var password = $api.val($api.dom('#password'));
+				
+				var user = api.require('user');
+				//调用user模块
+				//调用user方法进行登录 mcm 中的user对象
+				user.login({
+					username : username,
+					password : password,
+				}, function(ret, err) {
+					//隐藏进度提示框
+					var model = api.require('model');
+					api.hideProgress();
+					if (ret) {
+						api.toast({
+							msg : '登录成功',
+							location : 'middile'
+						});
+						//alert(JSON.stringify(ret));
+						model.findById({
+							class : 'user',
+							id : ret.userId
+						}, function(ret, err) {
+
+							//存储一下本地数据
+							$api.setStorage('id', ret.id); 			   // 数据库id
+							$api.setStorage('lastUser', ret.username); //最后登录用户名
+							$api.setStorage('nickname', ret.nickname); //用户昵称 userID targetID
+							$api.setStorage('email', ret.email); 	   //  用户邮箱
+							$api.setStorage('phone', ret.username);    //用户登录名 == 手机号
+							$api.setStorage('photo', ret.photo);       //用户头像
+							$api.setStorage('imToken', ret.imToken);   //融云的imToken值
+							$api.setStorage('createAt', ret.createAt); //用户注册时间
+							// 优化本地数据，简单加密
+								_setPrefs(window.userKey, ret, function() {
+								// 存储token到本地存储中
+								_setStorage("rong_token", ret.imToken);
+								// 存储用户信息到本地存储中
+								_setStorage(window.userKey + "h5", ret);
+							});
+							api.sendEvent({
+								name: 'login_success'
+							});
+							api.closeWin({
+								name : 'win_login',
+								animation : {
+									type : 'push',
+									subType : 'from_right',
+									duration : 500
+								}
+							});
+						});
+						return;
+						//
+						var url = 'https://api.cn.rong.io/user/getToken.json';
+						var method = "POST";
+						var common_url = 'https://api.cn.rong.io/user/getToken.json';
+						var appId = 'A6995045649271';
+						//应用程序的id
+						var key = 'C9C29F89-BCCD-501A-F46D-137CAB6FC4B4';
+						//应用程序的key
+						var now = parseInt(Date.now() / 1000);
+						var rand = Math.ceil(Math.random() * 1000000000);
+						var userId = ret.userId;
+						var aKey = "82hegw5uh4hex";
+						//融云注册申请
+						var sKey = "IHmh0ztIJH";
+						//融云注册申请
+						var name = '兄弟连三楼';
+						var appKey = SHA1(sKey + "" + rand + "" + now);
+						//*****************ajax请求开始********************************
+						api.ajax({
+							url : common_url,
+							method : method,
+							cache : false,
+							timeout : 2000,
+							headers : {
+								"Content-type" : "application/x-www-form-urlencoded",
+								"App-Key" : aKey,
+								"Nonce" : rand,
+								"Timestamp" : now,
+								"Signature" : appKey
+							},
+							data : {
+								body : "userId=1410200695@qq.com&name=兄弟连三楼 &portraitUri="
+							} 
+							//融云上注册的用户id和用户名，头像可以无
+						}, function(ret, err) { 
+							window.Token = ret.token;
+							//保存用户偏好数据->保存imtoken值到本地
+							$api.setStorage('Token',window.Token);
+						});
+						$api.setStorage('userId', ret.userId);
+						var model = api.require('model');
+						//配置默认信息，传输信息的基础
+						model.config({
+							appId : 'A6995045649271', //应用的id，在APICloud上应用概览里获取，可以为空
+							appKey : 'C9C29F89-BCCD-501A-F46D-137CAB6FC4B4', //：应用的安全校验Key，在APICloud上应用概览里获取，不能为空
+							host : 'https://d.apicloud.com' //应用服务器地址，可为空，为空时默认为编译时的服务器地址
+						});
+						//调用 model.insert（）{} 方法 执行相关的一些变量啊 啥的
+						model.updateById({
+							class : 'user',
+							id : ret.userId,
+							value : {
+								username : username,
+								password : password,
+								email : '1410200695@qq.com',
+								imToken : window.Token
+							}
+						}, function(ret, err) {
+							var msg = "";
+							if (ret) {
+								msg += "ret:" + JSON.stringify(ret);
+							}
+							if (err) {
+								msg += "err:" + JSON.stringify(err);
+							}
+							//							alert(msg);
+						});
+						api.alert({
+							title : '登陆成功',
+							buttons : ['确定']
+						}, function(ret, err) {
+							if (ret.buttonIndex == 1) {
+								api.closeWin();
+							}
+						});
+					} else {
+						//弹出一个定时自动关闭的提示框
+						api.toast({
+							msg : '用户名或密码错误',
+							location : "middle"
+						})
+					}
+				});
+			};
+		</script>
+	</body>
+</html>
