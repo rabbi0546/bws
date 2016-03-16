@@ -8,6 +8,8 @@
 
 ----------
 ## 主要功能 ##
+![头像上传类](http://7xrvub.com1.z0.glb.clouddn.com/1.png)
+
 - 融云通讯
 - 本地DB存储
 - 登陆注册前后端实现
@@ -20,9 +22,11 @@
 ----------
 
 ## 后端语言 ##
+![](http://7xrvub.com1.z0.glb.clouddn.com/2.png)
 >使用的是ApiCloud的后台 基于**七牛云** 
 >，操作数据库的的SDK是 [Apicloud-Result.js](https://github.com/apicloudcom/mcm-js-sdk)
 
+![](http://7xrvub.com1.z0.glb.clouddn.com/3.png)
 ----------
 
 ## 前端语言 ##
