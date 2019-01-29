@@ -5,6 +5,9 @@
 ![面包工作室](http://7xrvub.com1.z0.glb.clouddn.com/bws_icon.png)
 ##BWS 
 >由<a style="color:red;">小米无节操</a>和<a style="color:red;">lalalalalala</a>基于***ApiCloud***开发平台书写的IM及时通讯APP案例.
+## 融云初始化流程
+
+![融云初始化流程](./image/rongyuninit.png)
 
 ----------
 ## 主要功能 ##
